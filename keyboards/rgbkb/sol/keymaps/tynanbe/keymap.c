@@ -51,9 +51,11 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
 
 
+#ifdef TAP_DANCE_ENABLE
 qk_tap_dance_action_t tap_dance_actions[] = {
   TAP_DANCE_ACTIONS_USER,
 };
+#endif // TAP_DANCE_ENABLE
 
 
 
