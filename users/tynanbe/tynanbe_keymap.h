@@ -1,6 +1,8 @@
 #pragma once
 
 #include "quantum.h"
+#include "tynanbe.h"
+#include "tynanbe_process_record.h"
 
 
 
@@ -19,35 +21,41 @@
 
 
 /* Maintain standard 5-key, half-row macros, below these utility macros and
- * automatically apply `MT()` or `TD()` modifiers with
+ * automatically apply `MT(MOD_*, keycode)` mod-tap modifiers with e.g.
  * the `MODS_L()` and `MODS_R()` utility macros.
  */
 
-#define IS_BASIC(kc) ((uint16_t)(kc) >= (uint16_t)QK_BASIC \
-                     && (uint16_t)(kc) <= (uint16_t)QK_BASIC_MAX)
-
-#define MT_OR_TD(mod, kc)                     \
-        (((kc) == _______ || (kc) == XXXXXXX) \
-        ? (kc)                                \
-        : (IS_BASIC(kc))                      \
-          ? MT((MOD_ ## mod), (kc))           \
-          : TD(kc))
-
-#define MOD_KEYS_L(kc_0, kc_1, kc_2, kc_3, kc_4) \
-        MT_OR_TD(LSFT, (kc_0)),                  \
-        MT_OR_TD(LCTL, (kc_1)),                  \
-        MT_OR_TD(LALT, (kc_2)),                  \
-        MT_OR_TD(LGUI, (kc_3)),                  \
+#define MT_BASIC_L(kc_0, kc_1, kc_2, kc_3, kc_4) \
+        MT(MOD_LSFT, (kc_0)),                    \
+        MT(MOD_LCTL, (kc_1)),                    \
+        MT(MOD_LALT, (kc_2)),                    \
+        MT(MOD_LGUI, (kc_3)),                    \
         (kc_4)
-#define MODS_L(row) MOD_KEYS_L(row)
+#define MODS_L(...) MT_BASIC_L(__VA_ARGS__)
 
-#define MOD_KEYS_R(kc_4, kc_3, kc_2, kc_1, kc_0) \
+#define MT_BASIC_R(kc_4, kc_3, kc_2, kc_1, kc_0) \
         (kc_4),                                  \
-        MT_OR_TD(LGUI, (kc_3)),                  \
-        MT_OR_TD(LALT, (kc_2)),                  \
-        MT_OR_TD(LCTL, (kc_1)),                  \
-        MT_OR_TD(LSFT, (kc_0))
-#define MODS_R(row) MOD_KEYS_R(row)
+        MT(MOD_LGUI, (kc_3)),                    \
+        MT(MOD_LALT, (kc_2)),                    \
+        MT(MOD_LCTL, (kc_1)),                    \
+        MT(MOD_LSFT, (kc_0))
+#define MODS_R(...) MT_BASIC_R(__VA_ARGS__)
+
+#define LT_BASIC_L(kc_0, kc_1, kc_2, kc_3, kc_4) \
+        LT(_SYS, (kc_0)),                        \
+        (kc_1),                                  \
+        (kc_2),                                  \
+        (kc_3),                                  \
+        (kc_4)
+#define LYRS_L(...) LT_BASIC_L(__VA_ARGS__)
+
+#define LT_BASIC_R(kc_4, kc_3, kc_2, kc_1, kc_0) \
+        (kc_4),                                  \
+        (kc_3),                                  \
+        (kc_2),                                  \
+        (kc_1),                                  \
+        LT(_SYS, (kc_0))
+#define LYRS_R(...) LT_BASIC_R(__VA_ARGS__)
 
 
 
@@ -113,6 +121,8 @@
              KC_Z,      KC_X,      KC_C,      KC_D,      KC_V
 #define COLEMAK_DHM_L2_MODS__________________________________ \
  MODS_L(COLEMAK_DHM_L2_______________________________________)
+#define COLEMAK_DHM_L3_LYRS__________________________________ \
+ LYRS_L(COLEMAK_DHM_L3_______________________________________)
 
 #define COLEMAK_DHM_R1_______________________________________ \
              KC_J,      KC_L,      KC_U,      KC_Y,   KC_QUOT
@@ -128,7 +138,7 @@
         COLEMAK_DHM_R1_______________________________________, \
         COLEMAK_DHM_L2_MODS__________________________________, \
         COLEMAK_DHM_R2_MODS__________________________________, \
-        COLEMAK_DHM_L3_______________________________________, \
+        COLEMAK_DHM_L3_LYRS__________________________________, \
         COLEMAK_DHM_R3_______________________________________, \
         THUMB_ERGO_L___________________,                       \
         THUMB_ERGO_R___________________
@@ -143,6 +153,8 @@
              KC_Z,      KC_X,      KC_C,      KC_V,      KC_B
 #define QWERTY_L2_MODS_______________________________________ \
  MODS_L(QWERTY_L2____________________________________________)
+#define QWERTY_L3_LYRS_______________________________________ \
+ LYRS_L(QWERTY_L3____________________________________________)
 
 #define QWERTY_R1____________________________________________ \
              KC_Y,      KC_U,      KC_I,      KC_O,      KC_P
@@ -158,7 +170,7 @@
         QWERTY_R1____________________________________________, \
         QWERTY_L2_MODS_______________________________________, \
         QWERTY_R2_MODS_______________________________________, \
-        QWERTY_L3____________________________________________, \
+        QWERTY_L3_LYRS_______________________________________, \
         QWERTY_R3____________________________________________, \
         THUMB_ERGO_L___________________,                       \
         THUMB_ERGO_R___________________
@@ -173,6 +185,8 @@
           KC_SCLN,      KC_Q,      KC_J,      KC_K,      KC_X
 #define DVORAK_L2_MODS_______________________________________ \
  MODS_L(DVORAK_L2____________________________________________)
+#define DVORAK_L3_LYRS_______________________________________ \
+ LYRS_L(DVORAK_L3____________________________________________)
 
 #define DVORAK_R1____________________________________________ \
              KC_F,      KC_G,      KC_C,      KC_R,      KC_L
@@ -188,7 +202,7 @@
         DVORAK_R1____________________________________________, \
         DVORAK_L2_MODS_______________________________________, \
         DVORAK_R2_MODS_______________________________________, \
-        DVORAK_L3____________________________________________, \
+        DVORAK_L3_LYRS_______________________________________, \
         DVORAK_R3____________________________________________, \
         THUMB_ERGO_L___________________,                       \
         THUMB_ERGO_R___________________
@@ -203,6 +217,8 @@
              KC_Z,      KC_X,      KC_C,      KC_V,      KC_B
 #define COLEMAK_L2_MODS______________________________________ \
  MODS_L(COLEMAK_L2___________________________________________)
+#define COLEMAK_L3_LYRS______________________________________ \
+ LYRS_L(COLEMAK_L3___________________________________________)
 
 #define COLEMAK_R1___________________________________________ \
              KC_J,      KC_L,      KC_U,      KC_Y,   KC_QUOT
@@ -218,7 +234,7 @@
         COLEMAK_R1___________________________________________, \
         COLEMAK_L2_MODS______________________________________, \
         COLEMAK_R2_MODS______________________________________, \
-        COLEMAK_L3___________________________________________, \
+        COLEMAK_L3_LYRS______________________________________, \
         COLEMAK_R3___________________________________________, \
         THUMB_ERGO_L___________________,                       \
         THUMB_ERGO_R___________________
@@ -360,7 +376,11 @@
 #define SYMBOL_L4______________________ \
           _______, SKC_ND_MD,   _______
 #define SYMBOL_L2_MODS_______________________________________ \
- MODS_L(SYMBOL_L2____________________________________________)
+        KC_PLUS,                                              \
+        MT(MOD_LCTL, KC_EQL),                                 \
+        KC_LPRN,                                              \
+        KC_RPRN,                                              \
+        KC_DQT
 
 #define SYMBOL_R1____________________________________________ \
           KC_CIRC,   KC_AMPR,   KC_ASTR,   KC_QUES,   KC_QUOT
@@ -371,7 +391,11 @@
 #define SYMBOL_R4______________________ \
           _______, SKC_BU_EL,   _______
 #define SYMBOL_R2_MODS_______________________________________ \
- MODS_R(SYMBOL_R2____________________________________________)
+        KC_COLN,                                              \
+        MT(MOD_LGUI, KC_RBRC),                                \
+        MT(MOD_LALT, KC_LBRC),                                \
+        KC_RCBR,                                              \
+        KC_LCBR
 
 #define LAYOUT_COMMON_SYMBOL                                   \
         SYMBOL_L1____________________________________________, \
