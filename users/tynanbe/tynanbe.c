@@ -91,6 +91,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         // Like layer_on(_NUM_N)
         state = state | (1UL << _NUM_N);
       }
+      else {
+        state = state & ~(1UL << _NUM_N);
+      }
       break;
     default:
       break;
@@ -99,6 +102,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
   state = layer_state_set_rgb(state);
 #endif // RGB_ENABLE
+
   return layer_state_set_keymap(state);
 }
 
