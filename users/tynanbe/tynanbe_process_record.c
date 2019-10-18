@@ -54,18 +54,36 @@ bool process_record_df_mode(uint16_t keycode, keyrecord_t *record) {
     return true;
   }
 
-  uint8_t layer_default = biton32(default_layer_state);
-  uint8_t layer_next = (layer_default < LAYERS_BASIC_MAX)
-                       ? layer_default + 1
-                       : LAYERS_BASIC;
-  uint8_t layer_prev = (layer_default > LAYERS_BASIC
-                       && layer_default <= LAYERS_BASIC_MAX)
-                       ? layer_default - 1
-                       : LAYERS_BASIC_MAX;
+  uint8_t mods_held = mod_config(get_mods());
+  uint8_t mods_osm = mod_config(get_oneshot_mods());
 
-  return (keycode == DF_MODE_FORWARD)
-         ? process_record_skc(DF(layer_next), DF(layer_prev), record)
-         : process_record_skc(DF(layer_prev), DF(layer_next), record);
+  del_mods(mods_held);
+  clear_oneshot_mods();
+
+  if ((mods_held | mods_osm) & MOD_MASK_SHIFT) {
+    keycode = (keycode == DF_MODE_FORWARD)
+              ? DF_MODE_REVERSE
+              : DF_MODE_FORWARD;
+  }
+
+  uint8_t default_layer = biton32(default_layer_state);
+  if (keycode == DF_MODE_FORWARD) {
+    default_layer = (default_layer < LAYERS_BASIC_MAX)
+                    ? default_layer + 1
+                    : LAYERS_BASIC;
+  }
+  else {
+    default_layer = (default_layer > LAYERS_BASIC
+                    && default_layer <= LAYERS_BASIC_MAX)
+                    ? default_layer - 1
+                    : LAYERS_BASIC_MAX;
+  }
+
+  default_layer_set(1UL << default_layer);
+
+  add_mods(mods_held);
+
+  return true;
 }
 
 /* Send any keycode `kc_0` on tap, and any other keycode `kc_1` on Shift + tap.
@@ -75,20 +93,20 @@ bool process_record_skc(uint16_t kc_0, uint16_t kc_1, keyrecord_t *record) {
     return true;
   }
 
-  uint8_t held_mods = mod_config(get_mods());
-  uint8_t osm_mods = mod_config(get_oneshot_mods());
+  uint8_t mods_held = mod_config(get_mods());
+  uint8_t mods_osm = mod_config(get_oneshot_mods());
 
-  del_mods(held_mods);
+  del_mods(mods_held);
   clear_oneshot_mods();
 
-  if ((held_mods | osm_mods) & MOD_MASK_SHIFT) {
+  if ((mods_held | mods_osm) & MOD_MASK_SHIFT) {
     tap_code16(kc_1);
   }
   else {
     tap_code16(kc_0);
   }
 
-  add_mods(held_mods);
+  add_mods(mods_held);
 
   return true;
 }
@@ -100,22 +118,22 @@ bool process_record_ss(char str[], keyrecord_t *record) {
     return true;
   }
 
-  uint8_t held_mods = mod_config(get_mods());
-  uint8_t osm_mods = mod_config(get_oneshot_mods());
+  uint8_t mods_held = mod_config(get_mods());
+  uint8_t mods_osm = mod_config(get_oneshot_mods());
 
-  del_mods(held_mods);
+  del_mods(mods_held);
   clear_oneshot_mods();
 
-  if (held_mods & MOD_MASK_SHIFT) {
+  if (mods_held & MOD_MASK_SHIFT) {
     add_mods(MOD_MASK_SHIFT);
   }
-  if (osm_mods & MOD_MASK_SHIFT) {
+  if (mods_osm & MOD_MASK_SHIFT) {
     set_oneshot_mods(MOD_MASK_SHIFT);
   }
 
   send_string(str);
 
-  add_mods(held_mods);
+  add_mods(mods_held);
 
   return true;
 }
