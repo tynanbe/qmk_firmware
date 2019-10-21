@@ -164,6 +164,9 @@ bool process_record_ss(char str[], keyrecord_t *record) {
 
   send_string(str);
 
+  del_mods(MOD_MASK_SHIFT);
+  clear_oneshot_mods();
+
   add_mods(mods_held);
 
   return true;
