@@ -23,6 +23,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #  endif
 #endif // KEYLOGGER_ENABLE
 
+  bool handoff = true;
+
+  /* Use normal Numeral LAYOUT with some default layer(s)
+   */
+  if (keycode >> 8 == LT(_NUM, KC_NO) >> 8) {
+    switch (biton32(default_layer_state)) {
+      case _QWERTY: {
+        action_t action;
+        action.code = ACTION_LAYER_TAP_KEY(_NUM_N & 0xF, keycode & 0xFF);
+        process_action(record, action);
+        handoff = false;
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  else if (keycode == TG(_NUM)) {
+    switch (biton32(default_layer_state)) {
+      case _QWERTY: {
+        action_t action;
+        action.code = ACTION_LAYER_TOGGLE(_NUM_N & 0xFF);
+        process_action(record, action);
+        handoff = false;
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
   switch (keycode) {
     case DF_MODE_FORWARD:
     case DF_MODE_REVERSE:
@@ -42,7 +73,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
          process_record_rgb(keycode, record) &&
 #endif // RGB_ENABLE
-         true;
+         handoff;
 }
 
 

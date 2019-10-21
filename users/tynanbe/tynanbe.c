@@ -81,24 +81,6 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  /* Use normal Numeral LAYOUT with the following default layer(s)
-   */
-  switch (biton32(default_layer_state)) {
-    case _QWERTY:
-      if (layer_state_cmp(state, _NUM)) {
-        // Like layer_off(_NUM)
-        state = state & ~(1UL << _NUM);
-        // Like layer_on(_NUM_N)
-        state = state | (1UL << _NUM_N);
-      }
-      else {
-        state = state & ~(1UL << _NUM_N);
-      }
-      break;
-    default:
-      break;
-  }
-
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
   state = layer_state_set_rgb(state);
 #endif // RGB_ENABLE
