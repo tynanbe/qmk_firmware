@@ -244,7 +244,7 @@
 #define SYSTEM_L1____________________________________________ \
             RESET,     DEBUG,   MG_NKRO,    DF_MOD,   RGB_TOG
 #define SYSTEM_L2____________________________________________ \
-          KC_LSFT,   KC_LCTL,   KC_LALT,   KC_LGUI,   _______
+          KC_LSFT,   KC_LCTL,   KC_LALT,   KC_LGUI,   KC_CAPS
 #define SYSTEM_L3____________________________________________ \
           _______,   _______,   _______,  TG(_NAV),   _______
 #define SYSTEM_L4______________________                       \
@@ -276,14 +276,14 @@
 #define NAVIGATION_L2________________________________________ \
           KC_LSFT,   KC_LCTL,   KC_LALT,   KC_LGUI,   KC_BTN3
 #define NAVIGATION_L3________________________________________ \
-          _______,   KC_WH_U,   KC_WH_D,  TG(_NAV),   KC_BTN2
+          _______,   KC_WH_U,   KC_WH_D,  TG(_NAV),    KC_INS
 #define NAVIGATION_L4__________________                       \
           _______,   _______,    KC_ESC
 
 #define NAVIGATION_R1________________________________________ \
           KC_BSPC,   KC_HOME,   KC_PGDN,   KC_PGUP,    KC_END
 #define NAVIGATION_R2________________________________________ \
-          KC_CAPS,   KC_LEFT,   KC_DOWN,     KC_UP,   KC_RGHT
+          KC_BTN2,   KC_LEFT,   KC_DOWN,     KC_UP,   KC_RGHT
 #define NAVIGATION_R3________________________________________ \
           KC_BTN1,   KC_MS_L,   KC_MS_D,   KC_MS_U,   KC_MS_R
 #define NAVIGATION_R4__________________                       \
