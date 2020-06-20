@@ -27,21 +27,34 @@
 #ifdef RGB_MATRIX_ENABLE
 // Reacts to keypresses (will slow down matrix scan by a lot)
 #  define RGB_MATRIX_KEYPRESSES
-// Reacts to keyreleases (not recommened)
+// Reacts to keyreleases (instead of keypresses)
 // #  define RGB_MATRIX_KEYRELEASES
 #  define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-// Number of ticks to wait until disabling effects
-// #  define RGB_DISABLE_AFTER_TIMEOUT 0
+// Number of milliseconds to wait until rgb automatically turns off
+// #  define RGB_DISABLE_TIMEOUT 0
 // Turn off effects when suspended
 #  define RGB_DISABLE_WHEN_USB_SUSPENDED true
+// Limits the number of LEDs to process in an animation per task run
+// (increases keyboard responsiveness)
+// #  define RGB_MATRIX_LED_PROCESS_LIMIT (DRIVER_LED_TOTAL + 4) / 5
+// Limits in milliseconds how frequently an animation will update the LEDs
+// 16 (16ms) is equivalent to limiting to 60fps
+// (increases keyboard responsiveness)
+// #  define RGB_MATRIX_LED_FLUSH_LIMIT 16
 // Limits maximum brightness of LEDs to 200 out of 255
 // If not defined maximum brightness is set to 255
 // #  define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200
-// #  define EECONFIG_RGB_MATRIX (uint32_t *)16
 #  define RGB_MATRIX_HUE_STEP 8
 #  define RGB_MATRIX_SAT_STEP 8
 #  define RGB_MATRIX_VAL_STEP 5
 #  define RGB_MATRIX_SPD_STEP 10
+#  define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GRADIENT_UP_DOWN
+#  define RGB_MATRIX_STARTUP_HUE 247
+// #  define RGB_MATRIX_STARTUP_SAT 255
+// #  define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS
+// #  define RGB_MATRIX_STARTUP_SPD 127
+// Use an unused EEPROM index instead of sharing with RGBLIGHT
+// #  define EECONFIG_RGB_MATRIX (uint32_t *)16
 
 #  if defined(__AVR__) && !defined(__AVR_AT90USB1286__)
 #    define DISABLE_RGB_MATRIX_ALPHAS_MODS
