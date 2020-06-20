@@ -251,11 +251,11 @@
         _______________________________
 
 #define SYSTEM_R1____________________________________________ \
-          RGB_MOD,   RGB_HUD,   KC_BRID,   KC_BRIU,   RGB_HUI
+          RGB_MOD,   RGB_SPI,   RGB_HUI,   RGB_SAI,   RGB_VAI
 #define SYSTEM_R2____________________________________________ \
-          _______,   KC_MPRV,   KC_MPLY,   KC_MUTE,   KC_MNXT
+          KC_BRIU,   KC_MPRV,   KC_MPLY,   KC_MUTE,   KC_MNXT
 #define SYSTEM_R3____________________________________________ \
-          _______,  TG(_NUM),   KC_VOLD,   KC_VOLU,   _______
+          KC_BRID,  TG(_NUM),   KC_VOLD,   KC_VOLU,   _______
 #define SYSTEM_R4______________________                       \
         _______________________________
 
