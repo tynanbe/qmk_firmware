@@ -69,6 +69,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
 
+#if defined(MT_MAP_USER) || defined(MT_MAP_KEYMAP)
+  switch(get_highest_layer(layer_state)) {
+#  ifdef MT_MAP_USER
+    MT_MAP_USER
+#  endif
+#  ifdef MT_MAP_KEYMAP
+    MT_MAP_KEYMAP
+#  endif
+  }
+#endif
+
   return process_record_keymap(keycode, record) &&
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
          process_record_rgb(keycode, record) &&

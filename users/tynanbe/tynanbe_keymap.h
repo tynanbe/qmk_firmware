@@ -59,10 +59,78 @@
 
 
 
+/* Advanced mod-tap macros that will automatically supply `process_record_user`
+ * with the logic needed to process mod-tap keycodes that can send non-basic
+ * keycodes on tap, e.g. shifted keycodes, which are normally not supported.
+ *
+ * Use `#undef MT_MAP_USER` in the keymap space to totally override userspace
+ * invocations of these macros.
+ *
+ * Use `#def MT_MAP_KEYMAP` in the keymap space to support more layers, in
+ * addition to (or instead of), those defined in userspace.
+ *
+ * The `MT_MAP(layer, row_l, row_r, row_l_mods, row_r_mods)` macro will compare
+ * the `row_l` and `row_r` keycodes with their `row_l_mods` and `row_r_mods`
+ * counterparts respectively, when `layer` is the highest active layer, sending
+ * the `row_l` and `row_r` keycodes on tap actions in place of any `row_l_mods`
+ * and `row_r_mods` keycodes that differ.
+ *
+ * Example:
+ * ```
+ * #define ROW_L              KC_TILDE,   KC_A, KC_LCBR, KC_RCBR,   KC_D
+ * #define ROW_L_MODS  MODS_L(  KC_F21,   KC_A,  KC_F23,  KC_F24,   KC_D)
+ * #define ROW_R                   ...,    ...,     ...,     ...,    ...
+ * #define ROW_R_MODS  MODS_R(     ..., KC_F21,  KC_F22,  KC_F23, KC_F24)
+ *
+ * #define MT_MAP_USER \
+ *         MT_MAP(_SYM,      ROW_L,      ROW_R, ROW_L_MODS, ROW_R_MODS)
+ * ```
+ *
+ * In the above example, the first key in `row_l_mods` will send `KC_TILDE` when
+ * QMK recognizes a tap event, rather than `KC_F21`, simply by recognizing that
+ * the keycodes differ. Conversely, the second key in `row_l_mods` will bypass
+ * any special processing and send `KC_A` on tap events.
+ */
+
+#define MT_MAP_KEYCODE(kc, mt_kc)        \
+        case (mt_kc):                    \
+          if (record->tap.count > 0      \
+          && (kc) != ((mt_kc) & 0xFF)) { \
+            if (record->event.pressed) { \
+              register_code16((kc));     \
+            } else {                     \
+              unregister_code16((kc));   \
+            }                            \
+            handoff = false;             \
+          }                              \
+          break;
+
+#define MT_MAP_ROW(layer,                             \
+                    kc_0,  kc_1,  kc_2,  kc_3, _kc_4, \
+                   _kc_5,  kc_6,  kc_7,  kc_8,  kc_9, \
+                    mt_0,  mt_1,  mt_2,  mt_3, _mt_4, \
+                   _mt_5,  mt_6,  mt_7,  mt_8,  mt_9) \
+        case (layer):                                 \
+          switch(keycode) {                           \
+            MT_MAP_KEYCODE((kc_0), (mt_0))            \
+            MT_MAP_KEYCODE((kc_1), (mt_1))            \
+            MT_MAP_KEYCODE((kc_2), (mt_2))            \
+            MT_MAP_KEYCODE((kc_3), (mt_3))            \
+            MT_MAP_KEYCODE((kc_6), (mt_6))            \
+            MT_MAP_KEYCODE((kc_7), (mt_7))            \
+            MT_MAP_KEYCODE((kc_8), (mt_8))            \
+            MT_MAP_KEYCODE((kc_9), (mt_9))            \
+          }                                           \
+          break;
+
+#define MT_MAP(...) MT_MAP_ROW(__VA_ARGS__)
+
+
+
 #define _____________________________________________________ \
           _______,   _______,   _______,   _______,   _______
 
-#define _______________________________ \
+#define _______________________________                       \
           _______,   _______,   _______
 
 #define ___ _______
@@ -101,15 +169,11 @@
 
 
 
-#define THUMB_ERGO_L___________________ \
-        OSM(MOD_LSFT),                  \
-        LT(_NAV, KC_BSPC),              \
-        OSL(_SYM)
+#define THUMB_ERGO_L___________________                       \
+                  OSM(MOD_LSFT), LT(_NAV, KC_BSPC), OSL(_SYM)
 
-#define THUMB_ERGO_R___________________ \
-        OSL(_SYM),                      \
-        LT(_NUM, KC_SPC),               \
-        OSM(MOD_LSFT)
+#define THUMB_ERGO_R___________________                       \
+        OSL(_SYM), LT(_NUM, KC_SPC), OSM(MOD_LSFT)
 
 
 
@@ -248,7 +312,7 @@
 #define SYSTEM_L3____________________________________________ \
           _______,   _______,   _______,  TG(_NAV),   _______
 #define SYSTEM_L4______________________                       \
-        _______________________________
+                              _______________________________
 
 #define SYSTEM_R1____________________________________________ \
           RGB_MOD,   RGB_SPI,   RGB_HUI,   RGB_SAI,   RGB_VAI
@@ -278,7 +342,7 @@
 #define NAVIGATION_L3________________________________________ \
           _______,   KC_WH_U,   KC_WH_D,  TG(_NAV),    KC_INS
 #define NAVIGATION_L4__________________                       \
-          _______,   _______,    KC_ESC
+                                _______,   _______,    KC_ESC
 
 #define NAVIGATION_R1________________________________________ \
           KC_BSPC,   KC_HOME,   KC_PGDN,   KC_PGUP,    KC_END
@@ -301,10 +365,10 @@
 
 
 
-#define NUMERAL_GEN_L4_________________ \
-          _______,    KC_TAB,    KC_ESC
+#define NUMERAL_GEN_L4_________________                       \
+                                _______,    KC_TAB,    KC_ESC
 
-#define NUMERAL_GEN_R4_________________ \
+#define NUMERAL_GEN_R4_________________                       \
         _______________________________
 
 #define NUMERAL_ERGO_L1______________________________________ \
@@ -314,7 +378,7 @@
 #define NUMERAL_ERGO_L3______________________________________ \
            KC_F12,    KC_F11,   KC_MINS,    KC_SPC,   KC_BSPC
 #define NUMERAL_ERGO_L4________________                       \
-        NUMERAL_GEN_L4_________________
+                              NUMERAL_GEN_L4_________________
 
 #define NUMERAL_ERGO_R1______________________________________ \
         FUNC_ERGO_R__________________________________________
@@ -344,7 +408,7 @@
 #define NUMERAL_L3___________________________________________ \
            KC_F11,    KC_F12,   KC_MINS,    KC_SPC,   KC_BSPC
 #define NUMERAL_L4_____________________                       \
-        NUMERAL_GEN_L4_________________
+                              NUMERAL_GEN_L4_________________
 
 #define NUMERAL_R1___________________________________________ \
         FUNC_R_______________________________________________
@@ -373,14 +437,11 @@
           KC_PLUS,    KC_EQL,   KC_LPRN,   KC_RPRN,    KC_DQT
 #define SYMBOL_L3____________________________________________ \
             KC_LT,   KC_PIPE,   KC_MINS,     KC_GT,   KC_BSLS
-#define SYMBOL_L4______________________ \
-          _______, SKC_ND_MD,   _______
+#define SYMBOL_L4______________________                       \
+                                _______, SKC_ND_MD,   _______
 #define SYMBOL_L2_MODS_______________________________________ \
-        KC_PLUS,                                              \
-        MT(MOD_LCTL, KC_EQL),                                 \
-        KC_LPRN,                                              \
-        KC_RPRN,                                              \
-        KC_DQT
+ MODS_L(   KC_F21,    KC_EQL,    KC_F23,    KC_F24,    KC_DQT)
+
 
 #define SYMBOL_R1____________________________________________ \
           KC_CIRC,   KC_AMPR,   KC_ASTR,   KC_QUES,   KC_QUOT
@@ -388,14 +449,10 @@
           KC_COLN,   KC_RBRC,   KC_LBRC,   KC_RCBR,   KC_LCBR
 #define SYMBOL_R3____________________________________________ \
            KC_GRV,   KC_UNDS,   KC_SLSH,   KC_TILD,   KC_SCLN
-#define SYMBOL_R4______________________ \
+#define SYMBOL_R4______________________                       \
           _______, SKC_BU_EL,   _______
 #define SYMBOL_R2_MODS_______________________________________ \
-        KC_COLN,                                              \
-        MT(MOD_LGUI, KC_RBRC),                                \
-        MT(MOD_LALT, KC_LBRC),                                \
-        KC_RCBR,                                              \
-        KC_LCBR
+ MODS_R(  KC_COLN,   KC_RBRC,   KC_LBRC,    KC_F23,    KC_F24)
 
 #define LAYOUT_COMMON_SYMBOL                                   \
         SYMBOL_L1____________________________________________, \
@@ -406,5 +463,14 @@
         SYMBOL_R3____________________________________________, \
         SYMBOL_L4______________________,                       \
         SYMBOL_R4______________________
+
+
+
+#define MT_MAP_USER                                                   \
+        MT_MAP(_SYM,                                                  \
+               SYMBOL_L2____________________________________________, \
+               SYMBOL_R2____________________________________________, \
+               SYMBOL_L2_MODS_______________________________________, \
+               SYMBOL_R2_MODS_______________________________________)
 
 // clang-format on
