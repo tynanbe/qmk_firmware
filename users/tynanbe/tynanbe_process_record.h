@@ -2,8 +2,6 @@
 
 #include "quantum.h"
 
-
-
 enum keycodes_user {
   DF_MODE_FORWARD = SAFE_RANGE,
   DF_MODE_REVERSE,
@@ -11,18 +9,6 @@ enum keycodes_user {
   SKC_NDASH_MDASH,
   SAFE_RANGE_KEYMAP
 };
-
-
-
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
-
-
-
-bool process_record_df_mode(uint16_t keycode, keyrecord_t *record);
-bool process_record_skc(uint16_t kc_0, uint16_t kc_1, keyrecord_t *record);
-bool process_record_ss(char str[], keyrecord_t *record);
-
-
 
 // clang-format off
 
@@ -33,3 +19,10 @@ bool process_record_ss(char str[], keyrecord_t *record);
 #define SKC_ND_MD SKC_NDASH_MDASH
 
 // clang-format on
+
+
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
+
+bool process_record_df_mode(uint16_t keycode, const keyrecord_t *record);
+bool process_record_skc(const uint16_t kc_0, const uint16_t kc_1, const keyrecord_t *record);
+bool process_record_ss(const char str[], const keyrecord_t *record);

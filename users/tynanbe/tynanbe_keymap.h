@@ -4,8 +4,6 @@
 #include "tynanbe.h"
 #include "tynanbe_process_record.h"
 
-
-
 // clang-format off
 
 #if (!defined(LAYOUT) && defined(KEYMAP))
@@ -17,7 +15,6 @@
  * number of arguments.
  */
 #define LAYOUT_UNFOLD(...) LAYOUT(__VA_ARGS__)
-
 
 
 /* Maintain standard 5-key, half-row macros, below these utility macros and
@@ -58,7 +55,6 @@
 #define LYRS_R(...) LT_BASIC_R(__VA_ARGS__)
 
 
-
 /* Advanced mod-tap macros that will automatically supply `process_record_user`
  * with the logic needed to process mod-tap keycodes that can send non-basic
  * keycodes on tap, e.g. shifted keycodes, which are normally not supported.
@@ -68,6 +64,11 @@
  *
  * Use `#def MT_MAP_KEYMAP` in the keymap space to support more layers, in
  * addition to (or instead of), those defined in userspace.
+ *
+ * Important: Define `MT_MAP_USER` and `MT_MAP_KEYMAP` macros by declaring
+ * `MT_MAP(layer, ...)` for the highest applicable layer first, and following
+ * descending order for any other applicable layers, so transparent keycodes
+ * will function as expected.
  *
  * The `MT_MAP(layer, row_l, row_r, row_l_mods, row_r_mods)` macro will compare
  * the `row_l` and `row_r` keycodes with their `row_l_mods` and `row_r_mods`
@@ -119,7 +120,7 @@
                    _kc_5,  kc_6,  kc_7,  kc_8,  kc_9, \
                     mt_0,  mt_1,  mt_2,  mt_3, _mt_4, \
                    _mt_5,  mt_6,  mt_7,  mt_8,  mt_9) \
-        case (layer):                                 \
+        else if (layer_state_is((layer))) {           \
           switch(keycode) {                           \
             MT_MAP_KEYCODE((kc_0), (mt_0))            \
             MT_MAP_KEYCODE((kc_1), (mt_1))            \
@@ -130,10 +131,9 @@
             MT_MAP_KEYCODE((kc_8), (mt_8))            \
             MT_MAP_KEYCODE((kc_9), (mt_9))            \
           }                                           \
-          break;
+        }
 
 #define MT_MAP(...) MT_MAP_ROW(__VA_ARGS__)
-
 
 
 #define _____________________________________________________ \
@@ -143,7 +143,6 @@
           _______,   _______,   _______
 
 #define ___ _______
-
 
 
 #define FUNC_ERGO_L__________________________________________ \
@@ -161,7 +160,6 @@
  MODS_R(NUMROW_ERGO_R________________________________________)
 
 
-
 #define FUNC_L_______________________________________________ \
             KC_F1,     KC_F2,     KC_F3,     KC_F4,     KC_F5
 #define NUMROW_L_____________________________________________ \
@@ -177,13 +175,11 @@
  MODS_R(NUMROW_R_____________________________________________)
 
 
-
 #define THUMB_ERGO_L___________________                       \
                   OSM(MOD_LSFT), LT(_NAV, KC_BSPC), OSL(_SYM)
 
 #define THUMB_ERGO_R___________________                       \
         OSL(_SYM), LT(_NUM, KC_SPC), OSM(MOD_LSFT)
-
 
 
 #define COLEMAK_DHM_L1_______________________________________ \
@@ -217,7 +213,6 @@
         THUMB_ERGO_R___________________
 
 
-
 #define QWERTY_L1____________________________________________ \
              KC_Q,      KC_W,      KC_E,      KC_R,      KC_T
 #define QWERTY_L2____________________________________________ \
@@ -247,7 +242,6 @@
         QWERTY_R3____________________________________________, \
         THUMB_ERGO_L___________________,                       \
         THUMB_ERGO_R___________________
-
 
 
 #define DVORAK_L1____________________________________________ \
@@ -281,7 +275,6 @@
         THUMB_ERGO_R___________________
 
 
-
 #define COLEMAK_L1___________________________________________ \
              KC_Q,      KC_W,      KC_F,      KC_P,      KC_G
 #define COLEMAK_L2___________________________________________ \
@@ -313,7 +306,6 @@
         THUMB_ERGO_R___________________
 
 
-
 #define SYSTEM_L1____________________________________________ \
             RESET,     DEBUG,   MG_NKRO,    DF_MOD,   RGB_TOG
 #define SYSTEM_L2____________________________________________ \
@@ -343,7 +335,6 @@
         SYSTEM_R4______________________
 
 
-
 #define NAVIGATION_L1________________________________________ \
           KC_PSCR,   KC_ACL0,   KC_ACL1,   KC_ACL2,   _______
 #define NAVIGATION_L2________________________________________ \
@@ -371,7 +362,6 @@
         NAVIGATION_R3________________________________________, \
         NAVIGATION_L4__________________,                       \
         NAVIGATION_R4__________________
-
 
 
 #define NUMERAL_GEN_L4_________________                       \
@@ -409,7 +399,6 @@
         NUMERAL_ERGO_R4________________
 
 
-
 #define NUMERAL_L1___________________________________________ \
         FUNC_L_______________________________________________
 #define NUMERAL_L2___________________________________________ \
@@ -439,7 +428,6 @@
         NUMERAL_GEN_R4_________________
 
 
-
 #define SYMBOL_L1____________________________________________ \
           KC_EXLM,     KC_AT,   KC_HASH,    KC_DLR,   KC_PERC
 #define SYMBOL_L2____________________________________________ \
@@ -450,7 +438,6 @@
                                 _______, SKC_ND_MD,   _______
 #define SYMBOL_L2_MODS_______________________________________ \
  MODS_L(   KC_F21,    KC_EQL,    KC_F23,    KC_F24,    KC_DQT)
-
 
 #define SYMBOL_R1____________________________________________ \
           KC_CIRC,   KC_AMPR,   KC_ASTR,   KC_QUES,   KC_QUOT
@@ -472,7 +459,6 @@
         SYMBOL_R3____________________________________________, \
         SYMBOL_L4______________________,                       \
         SYMBOL_R4______________________
-
 
 
 #define MT_MAP_USER                                                   \
