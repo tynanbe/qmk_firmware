@@ -86,10 +86,19 @@
  *         MT_MAP(_SYM,      ROW_L,      ROW_R, ROW_L_MODS, ROW_R_MODS)
  * ```
  *
- * In the above example, the first key in `row_l_mods` will send `KC_TILDE` when
- * QMK recognizes a tap event, rather than `KC_F21`, simply by recognizing that
- * the keycodes differ. Conversely, the second key in `row_l_mods` will bypass
- * any special processing and send `KC_A` on tap events.
+ * In the above example, the first key in `row_l_mods` will send `KC_TILDE`
+ * when QMK recognizes a tap event for the first key in `ROW_L_MODS` on the
+ * `_SYM` layer, instead of `KC_F21`, simply by recognizing that the keycodes
+ * differ. Conversely, the second key in `row_l_mods` will bypass this special
+ * handling and send `KC_A` on tap events.
+ *
+ * Note: Using `KC_F21` through `KC_F24` in the first four positions of
+ * `ROW_L_MODS` and the last four positions of `ROW_R_MODS`, as placeholders
+ * for any shifted keycodes in `ROW_L` and `ROW_R`, will limit possible overlap
+ * with legitimate basic keycodes (that should not receive any special
+ * handling), to four uncommonly used basic keycodes, minimizing the chances of
+ * causing any inadvertent tap code replacements; however, any basic keycodes
+ * can be used, as long as they differ from their non-mod-tapped counterparts.
  */
 
 #define MT_MAP_KEYCODE(kc, mt_kc)        \
