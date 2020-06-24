@@ -6,11 +6,9 @@
 #  include "rgb_matrix.h"
 #endif // RGBLIGHT_ENABLE
 
-
-
+//TODO remove after QMK merges https://github.com/qmk/qmk_firmware/pull/9487
 static rgb_task_states rgb_task_state    = SYNCING;
 void my_eeconfig_update_rgb_matrix(void) { eeprom_update_block(&rgb_matrix_config, EECONFIG_RGB_MATRIX, sizeof(rgb_matrix_config)); }
-
 
 void rgb_matrix_toggle_eeprom_helper(bool write_to_eeprom) {
   rgb_matrix_config.enable ^= 1;
@@ -28,7 +26,6 @@ void rgb_matrix_toggle_eeprom_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_toggle_noeeprom(void) { rgb_matrix_toggle_eeprom_helper(false); }
 //void rgb_matrix_toggle(void) { rgb_matrix_toggle_eeprom_helper(true); }
-
 
 void rgb_matrix_mode_eeprom_helper(uint8_t mode, bool write_to_eeprom) {
   if (! rgb_matrix_config.enable) {
@@ -70,7 +67,6 @@ void rgb_matrix_step_helper(bool write_to_eeprom) {
 void rgb_matrix_step_noeeprom(void) { rgb_matrix_step_helper(false); }
 //void rgb_matrix_step(void) { rgb_matrix_step_helper(true); }
 
-
 void rgb_matrix_step_reverse_helper(bool write_to_eeprom) {
   uint8_t mode = rgb_matrix_config.mode - 1;
   rgb_matrix_mode_eeprom_helper(
@@ -82,7 +78,6 @@ void rgb_matrix_step_reverse_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_step_reverse_noeeprom(void) { rgb_matrix_step_reverse_helper(false); }
 //void rgb_matrix_step_reverse(void) { rgb_matrix_step_reverse_helper(true); }
-
 
 void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, bool write_to_eeprom) {
   if (! rgb_matrix_config.enable) {
@@ -110,7 +105,6 @@ void rgb_matrix_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, boo
 //void rgb_matrix_sethsv_noeeprom(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, false); }
 //void rgb_matrix_sethsv(uint16_t hue, uint8_t sat, uint8_t val) { rgb_matrix_sethsv_eeprom_helper(hue, sat, val, true); }
 
-
 void rgb_matrix_increase_hue_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
     rgb_matrix_config.hsv.h + RGB_MATRIX_HUE_STEP,
@@ -121,7 +115,6 @@ void rgb_matrix_increase_hue_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_increase_hue_noeeprom(void) { rgb_matrix_increase_hue_helper(false); }
 //void rgb_matrix_increase_hue(void) { rgb_matrix_increase_hue_helper(true); }
-
 
 void rgb_matrix_decrease_hue_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
@@ -134,7 +127,6 @@ void rgb_matrix_decrease_hue_helper(bool write_to_eeprom) {
 void rgb_matrix_decrease_hue_noeeprom(void) { rgb_matrix_decrease_hue_helper(false); }
 //void rgb_matrix_decrease_hue(void) { rgb_matrix_decrease_hue_helper(true); }
 
-
 void rgb_matrix_increase_sat_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
     rgb_matrix_config.hsv.h,
@@ -145,7 +137,6 @@ void rgb_matrix_increase_sat_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_increase_sat_noeeprom(void) { rgb_matrix_increase_sat_helper(false); }
 //void rgb_matrix_increase_sat(void) { rgb_matrix_increase_sat_helper(true); }
-
 
 void rgb_matrix_decrease_sat_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
@@ -158,7 +149,6 @@ void rgb_matrix_decrease_sat_helper(bool write_to_eeprom) {
 void rgb_matrix_decrease_sat_noeeprom(void) { rgb_matrix_decrease_sat_helper(false); }
 //void rgb_matrix_decrease_sat(void) { rgb_matrix_decrease_sat_helper(true); }
 
-
 void rgb_matrix_increase_val_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
     rgb_matrix_config.hsv.h,
@@ -170,7 +160,6 @@ void rgb_matrix_increase_val_helper(bool write_to_eeprom) {
 void rgb_matrix_increase_val_noeeprom(void) { rgb_matrix_increase_val_helper(false); }
 //void rgb_matrix_increase_val(void) { rgb_matrix_increase_val_helper(true); }
 
-
 void rgb_matrix_decrease_val_helper(bool write_to_eeprom) {
   rgb_matrix_sethsv_eeprom_helper(
     rgb_matrix_config.hsv.h,
@@ -181,7 +170,6 @@ void rgb_matrix_decrease_val_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_decrease_val_noeeprom(void) { rgb_matrix_decrease_val_helper(false); }
 //void rgb_matrix_decrease_val(void) { rgb_matrix_decrease_val_helper(true); }
-
 
 void rgb_matrix_set_speed_eeprom_helper(uint8_t speed, bool write_to_eeprom) {
   rgb_matrix_config.speed = speed;
@@ -199,7 +187,6 @@ void rgb_matrix_set_speed_eeprom_helper(uint8_t speed, bool write_to_eeprom) {
 void rgb_matrix_set_speed_noeeprom(uint8_t speed) { rgb_matrix_set_speed_eeprom_helper(speed, false); }
 void rgb_matrix_set_speed(uint8_t speed) { rgb_matrix_set_speed_eeprom_helper(speed, true); }
 
-
 void rgb_matrix_increase_speed_helper(bool write_to_eeprom) {
   rgb_matrix_set_speed_eeprom_helper(
     qadd8(rgb_matrix_config.speed, RGB_MATRIX_SPD_STEP),
@@ -209,7 +196,6 @@ void rgb_matrix_increase_speed_helper(bool write_to_eeprom) {
 void rgb_matrix_increase_speed_noeeprom(void) { rgb_matrix_increase_speed_helper(false); }
 //void rgb_matrix_increase_speed(void) { rgb_matrix_increase_speed_helper(true); }
 
-
 void rgb_matrix_decrease_speed_helper(bool write_to_eeprom) {
   rgb_matrix_set_speed_eeprom_helper(
     qsub8(rgb_matrix_config.speed, RGB_MATRIX_SPD_STEP),
@@ -218,17 +204,15 @@ void rgb_matrix_decrease_speed_helper(bool write_to_eeprom) {
 }
 void rgb_matrix_decrease_speed_noeeprom(void) { rgb_matrix_decrease_speed_helper(false); }
 //void rgb_matrix_decrease_speed(void) { rgb_matrix_decrease_speed_helper(true); }
-
-
+//TODO /remove
 
 void keyboard_post_init_rgb(void) {
+  //TODO set mode, hsv, speed first
 #if defined(RGBLIGHT_ENABLE)
   rgblight_disable_noeeprom();
 #elif defined(RGB_MATRIX_ENABLE)
   rgb_matrix_disable_noeeprom();
 #endif // RGBLIGHT_ENABLE
-
-
   return;
 }
 
@@ -250,8 +234,7 @@ typedef void (*rgb_func_pointer)(void);
 static void __attribute__((noinline)) handleKeycodeRGB(const uint8_t is_shifted, const rgb_func_pointer inc_func, const rgb_func_pointer dec_func) {
   if (is_shifted) {
     dec_func();
-  }
-  else {
+  } else {
     inc_func();
   }
 }
@@ -271,78 +254,37 @@ bool process_record_rgb(const uint16_t keycode, const keyrecord_t *record) {
         rgblight_toggle_noeeprom();
         return false;
       case RGB_MODE_FORWARD:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_step_noeeprom,
-          rgblight_step_reverse_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_step_noeeprom, rgblight_step_reverse_noeeprom);
         return false;
       case RGB_MODE_REVERSE:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_step_reverse_noeeprom,
-          rgblight_step_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_step_reverse_noeeprom, rgblight_step_noeeprom);
         return false;
       case RGB_HUI:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_increase_hue_noeeprom,
-          rgblight_decrease_hue_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_increase_hue_noeeprom, rgblight_decrease_hue_noeeprom);
         return false;
       case RGB_HUD:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_decrease_hue_noeeprom,
-          rgblight_increase_hue_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_decrease_hue_noeeprom, rgblight_increase_hue_noeeprom);
         return false;
       case RGB_SAI:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_increase_sat_noeeprom,
-          rgblight_decrease_sat_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_increase_sat_noeeprom, rgblight_decrease_sat_noeeprom);
         return false;
       case RGB_SAD:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_decrease_sat_noeeprom,
-          rgblight_increase_sat_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_decrease_sat_noeeprom, rgblight_increase_sat_noeeprom);
         return false;
       case RGB_VAI:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_increase_val_noeeprom,
-          rgblight_decrease_val_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_increase_val_noeeprom, rgblight_decrease_val_noeeprom);
         return false;
       case RGB_VAD:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_decrease_val_noeeprom,
-          rgblight_increase_val_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_decrease_val_noeeprom, rgblight_increase_val_noeeprom);
         return false;
       case RGB_SPI:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_increase_speed_noeeprom,
-          rgblight_decrease_speed_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_increase_speed_noeeprom, rgblight_decrease_speed_noeeprom);
         return false;
       case RGB_SPD:
-        handleKeycodeRGB(
-          shifted,
-          rgblight_decrease_speed_noeeprom,
-          rgblight_increase_speed_noeeprom
-        );
+        handleKeycodeRGB(shifted, rgblight_decrease_speed_noeeprom, rgblight_increase_speed_noeeprom);
         return false;
     }
 #endif // RGB_USE_NOEEPROM
   }
-
   return true;
 }
