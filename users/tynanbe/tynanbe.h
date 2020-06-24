@@ -20,9 +20,6 @@
 #include "eeprom.h"
 #include "tynanbe_keymap.h"
 #include "tynanbe_process_record.h"
-#ifdef TAP_DANCE_ENABLE
-#  include "tynanbe_tap_dance.h"
-#endif // TAP_DANCE_ENABLE
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
 #  include "tynanbe_rgb.h"
 #endif // RGB_ENABLE

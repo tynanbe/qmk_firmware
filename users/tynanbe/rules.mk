@@ -82,8 +82,5 @@ endif
 SPACE_CADET_ENABLE = no
 
 TAP_DANCE_ENABLE ?= no
-ifeq ($(strip $(TAP_DANCE_ENABLE)), yes)
-  SRC += tynanbe_tap_dance.c
-endif
 
 UNICODE_ENABLE ?= no
