@@ -14,7 +14,9 @@
 #  define RGBLIGHT_HUE_STEP 8
 #  define RGBLIGHT_SAT_STEP 8
 #  define RGBLIGHT_VAL_STEP 5
-// #  define RGBLIGHT_LIMIT_VAL 150
+#  ifndef RGBLIGHT_LIMIT_VAL
+#    define RGBLIGHT_LIMIT_VAL 120
+#  endif // RGBLIGHT_LIMIT_VAL
 #  undef RGBLIGHT_ANIMATIONS
 #  define RGBLIGHT_EFFECT_BREATHING
 #  define RGBLIGHT_EFFECT_KNIGHT
@@ -31,7 +33,7 @@
 // #  define RGB_MATRIX_KEYRELEASES
 #  define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 // Number of milliseconds to wait until rgb automatically turns off
-// #  define RGB_DISABLE_TIMEOUT 0
+#  define RGB_DISABLE_TIMEOUT 0
 // Turn off effects when suspended
 #  define RGB_DISABLE_WHEN_USB_SUSPENDED true
 // Limits the number of LEDs to process in an animation per task run
@@ -40,19 +42,21 @@
 // Limits in milliseconds how frequently an animation will update the LEDs
 // 16 (16ms) is equivalent to limiting to 60fps
 // (increases keyboard responsiveness)
-// #  define RGB_MATRIX_LED_FLUSH_LIMIT 16
-// Limits maximum brightness of LEDs to 200 out of 255
+#  define RGB_MATRIX_LED_FLUSH_LIMIT 16
+// Limits maximum brightness of LEDs to 120 out of 255
 // If not defined maximum brightness is set to 255
-// #  define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200
+#  ifndef RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 120
+#  endif // RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #  define RGB_MATRIX_HUE_STEP 8
 #  define RGB_MATRIX_SAT_STEP 8
 #  define RGB_MATRIX_VAL_STEP 5
 #  define RGB_MATRIX_SPD_STEP 10
-// #  define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GRADIENT_UP_DOWN
-// #  define RGB_MATRIX_STARTUP_HUE 247
-// #  define RGB_MATRIX_STARTUP_SAT 255
-// #  define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS
-// #  define RGB_MATRIX_STARTUP_SPD 127
+#  define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_GRADIENT_UP_DOWN
+#  define RGB_MATRIX_STARTUP_HUE 8
+#  define RGB_MATRIX_STARTUP_SAT UINT8_MAX
+#  define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#  define RGB_MATRIX_STARTUP_SPD 95
 // Use an unused EEPROM index instead of sharing with RGBLIGHT
 // #  define EECONFIG_RGB_MATRIX (uint32_t *)16
 

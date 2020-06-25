@@ -207,12 +207,15 @@ void rgb_matrix_decrease_speed_noeeprom(void) { rgb_matrix_decrease_speed_helper
 //TODO /remove
 
 void keyboard_post_init_rgb(void) {
-  //TODO set mode, hsv, speed first
 #if defined(RGBLIGHT_ENABLE)
+  //TODO set mode, hsv, speed
   rgblight_disable_noeeprom();
 #elif defined(RGB_MATRIX_ENABLE)
+  rgb_matrix_mode_noeeprom(RGB_MATRIX_STARTUP_MODE);
+  rgb_matrix_sethsv_noeeprom(RGB_MATRIX_STARTUP_HUE, RGB_MATRIX_STARTUP_SAT, RGB_MATRIX_STARTUP_VAL);
+  rgb_matrix_set_speed_noeeprom(RGB_MATRIX_STARTUP_SPD);
   rgb_matrix_disable_noeeprom();
-#endif // RGBLIGHT_ENABLE
+#endif // RGB_ENABLE
   return;
 }
 
